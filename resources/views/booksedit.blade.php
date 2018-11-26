@@ -9,23 +9,23 @@
         <form action="{{url("books/update")}}" method="POST">
             <!-- item_name -->
             <div class="form-group">
-                <label for="item_name">Title</label>
+                <label for="item_name">書籍名</label>
                 <input type="text" id="itme_name" name="item_name" class="form-control" value="{{$book->item_name}}">
 
-                <label for="item_number">Number</label>
+                <label for="item_number">冊数</label>
                 <input type="text" id="itme_number" name="item_number" class="form-control" value="{{$book->item_number}}">
 
-                <label for="item_number">Amount</label>
+                <label for="item_number">金額</label>
                 <input type="text" id="itme_amount" name="item_amount" class="form-control" value="{{$book->item_amount}}">
 
-                <label for="item_number">Published</label>
+                <label for="item_number">公開日</label>
                 <input type="datetime" id="published" name="published" class="form-control" value="{{$book->published}}">
 
                 <!-- Saveボタン/Backボタン -->
                 <div class="well well-sm">
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="submit" class="btn btn-primary">保存</button>
                     <a class="btn btn-link pull-right" href="{{url('/')}}">
-                        <i class="glyphicon glyphicon-backward"></i>Back
+                        <i class="glyphicon glyphicon-backward"></i>戻る
                     </a>
                 </div>
 

@@ -15,16 +15,41 @@ class BooksController extends Controller
         $this->middleware('auth');
     }
     // 登録画面-初期表示
-    public function index()
+    public function index(Request $request)
     {
-        #memo ページネーションはget()でハンク、pginatite(x)を使う。
-        #変更前:$books = Book::orderBy('created_at', 'asc')->get();
-        $books = Book::where('user_id',Auth::user()->id)->orderBy('created_at', 'asc')->paginate(3);
+        $keywords = $request->keywords;
+        if (empty($keywords))  {
+            $keywords = "";
+        }
+
+        $books = Book::where('user_id',Auth::user()->id)->where('item_name', 'like', '%'.$keywords.'%')->orderBy('created_at', 'asc')->paginate(3);
         return view('books',[
-            'books' => $books
+            'books' => $books,
+            'keywords' => $keywords,
         ]);
     }
-    
+
+    // 検索
+    public function search(Request $request)
+    {
+        // バリデーション
+        $validator = Validator::make($request->all(), [
+            'keywords' => 'max:10', // 仮で10文字にしてみる！
+        ]);
+
+        $keywords = $request->keywords;
+        if (empty($keywords))  {
+            $keywords = "";
+        }
+
+        $books = Book::where('user_id',Auth::user()->id)->where('item_name', 'like', '%'.$keywords.'%')->orderBy('created_at', 'asc')->paginate(3);
+        return view('books',[
+            'books' => $books,
+            'keywords' => $keywords,
+        ]);
+    }
+
+
     // 登録
     public function store(Request $request)
     {
@@ -39,10 +64,10 @@ class BooksController extends Controller
         // バリデーション：エラー
         if ($validator->fails()) {
             return redirect('/')
-            ->withInput()
-            ->withErrors($validator);
+                ->withInput()
+                ->withErrors($validator);
         }
-        
+
         // file取得
         $file = $request->file('item_img');
         // fileが空かチェック
@@ -64,17 +89,16 @@ class BooksController extends Controller
         $books->item_img = $filename;
         $books->published = $request->published;
         $books->save();
-        return redirect('/'); //「/」ルートにリダイレクト
+        return redirect('/')->with('flashmessage', '登録が完了しました。'); //「/」ルートにリダイレクト
     }
-    
+
     // 更新画面-初期表示
     public function edit($book_id)
     {
-        // {books} id値を取得 => Book $books id値の１レコード取得
         $books = Book::where('user_id',Auth::user()->id)->find($book_id);
         return view('booksedit', ['book'=>$books]);
     }
-    
+
     // 更新
     public function update(Request $request)
     {
@@ -93,7 +117,7 @@ class BooksController extends Controller
                 ->withInput()
                 ->withErrors($validator);
         }
-        
+
         // Eloquent モデル(データ更新)
         $books = Book::where('user_id',Auth::user()->id)->find($request->id); // 登録処理と違う場所。
         $books->item_name = $request->item_name;
@@ -101,13 +125,13 @@ class BooksController extends Controller
         $books->item_amount = $request->item_amount;
         $books->published = $request->published;
         $books->save(); //「/」ルートにリダイレクト
-        return redirect('/');
+        return redirect('/')->with('flashmessage', '更新が完了しました。');
     }
-    
+
     // 削除処理
     public function destroy(Book $book)
     {
         $book->delete();
-        return redirect('/');
+        return redirect('/')->with('flashmessage', '削除が完了しました。');
     }
 }

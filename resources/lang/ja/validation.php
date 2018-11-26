@@ -116,6 +116,11 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'item_name'=>'書籍名',
+        'item_number'=>'冊数',
+        'item_amount'=>'金額',
+        'published'=>'公開日',
+    ],
 
 ];

@@ -35,6 +35,10 @@ Route::post('/books/update', 'BooksController@update');
 // 削除処理
 Route::delete('/books/{book}', 'BooksController@destroy');
 // TODO x[book] カッコが間違っていた。
+
+// 検索処理
+Route::get('/bookssearch', 'BooksController@search');
+// memo Route::post ←postがあかんかった。 links()はgetでやりとりしてるっぽい。
 ?>
 
 
